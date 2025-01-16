@@ -77,7 +77,6 @@ Each installation step is automated and includes pre- and post-installation Time
    - Install and configure VNC server.
    - Set up Enpass, NordVPN, pCloud, and MediathekView.
    - Create Timeshift snapshots before and after major steps to ensure system safety.
-   ```
 
 4. Follow the on-screen prompts for additional configurations.
 
