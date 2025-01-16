@@ -26,7 +26,7 @@ timeshift --create --comments "Before executing sctipt install-vnc-etc.sh" --tag
 
 
 
-
+echo
 echo "## ########################################################################################################"
 echo "##"
 echo "##   Installing VNC..."
@@ -75,7 +75,7 @@ systemctl enable x11vnc.service
 systemctl start x11vnc
 echo ""
 echo ""
-echo "$(tput setaf 3)VNC installed and running, you can close this window"
+echo "$(tput setaf 3)VNC installed and running."
 
 
 # --------------------------------------------------------------------------------------------------------
@@ -85,7 +85,7 @@ timeshift --create --comments "VNC installed" --tags D
 
 
 
-
+echo
 echo "## ########################################################################################################"
 echo "##"
 echo "##   Installing Enpass..."
@@ -111,6 +111,7 @@ timeshift --create --comments "Enpass installed" --tags D
 
 
 
+echo
 echo "## ########################################################################################################"
 echo "##"
 echo "##   Installing NordVPN..."
@@ -250,7 +251,7 @@ timeshift --create --comments "NordVPN installed" --tags D
 
 
 
-
+echo
 echo "## ########################################################################################################"
 echo "##"
 echo "##   Installing pCloud..."
@@ -379,7 +380,7 @@ timeshift --create --comments "pCloud installed and added to autostart" --tags D
 
 
 
-
+echo
 echo "## ########################################################################################################"
 echo "##"
 echo "##   Installing Mediathekview, VLC and ffmpeg..."
@@ -413,8 +414,8 @@ echo "Installed Versions:"
 echo "VLC: ${vlc_version:-Not Installed}"
 echo "FFmpeg: ${ffmpeg_version:-Not Installed}"
 echo
-echo
 
+echo
 echo "## ########################################################################################################"
 echo "##"
 echo "##   Script complete!"
@@ -423,7 +424,7 @@ echo "##"
 echo "##   Have Fun!"
 echo "##"
 echo "## ########################################################################################################"
-
+echo
 
 
 
