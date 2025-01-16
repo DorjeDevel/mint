@@ -19,6 +19,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 
+echo
 echo "## ########################################################################################################"
 echo "##"
 echo "##   Checking if there is another process of this script running..."
@@ -42,6 +43,7 @@ trap 'rm -f "$LOCKFILE"' EXIT
 
 
 
+echo
 echo "## ########################################################################################################"
 echo "##"
 echo "##   Checking if Timeshift is running..."
