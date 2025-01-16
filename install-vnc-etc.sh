@@ -18,6 +18,24 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
+# Check if there is another process of this script running
+
+LOCKFILE="/var/lock/install-vnc-etc.lock"
+
+# Check if the script is already running
+if [ -e "$LOCKFILE" ]; then
+  echo "Another instance of this script is already running."
+  exit 1
+fi
+
+# Create a lock file to prevent multiple instances
+touch "$LOCKFILE"
+
+# Ensure the lock file is removed when the script exits
+trap 'rm -f "$LOCKFILE"' EXIT
+
+
+
 # --------------------------------------------------------------------------------------------------------
 #   Make a Timeshift Snapshot
 # --------------------------------------------------------------------------------------------------------
