@@ -25,7 +25,7 @@ echo "##"
 echo "##   Checking if there is another process of this script running..."
 echo "##"
 echo "## ########################################################################################################"
-echo
+echo "."
 
 LOCKFILE="/var/lock/install-vnc-etc.lock"
 
