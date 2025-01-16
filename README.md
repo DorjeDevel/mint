@@ -59,18 +59,25 @@ Each installation step is automated and includes pre- and post-installation Time
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/automated-installer.git
-   cd automated-installer
+   git clone https://github.com/DorjeDevel/mint.git
+   cd mint
    ```
 
 2. Make the script executable:
    ```bash
-   chmod +x install-vnc-etc.sh
+   chmod +x ./install-vnc-etc.sh
+   ```
+   Note: Ensure you are in the same directory as the `install-vnc-etc.sh` script when running this command.
    ```
 
 3. Run the script as `sudo`:
    ```bash
    sudo ./install-vnc-etc.sh
+   ```
+   This script will:
+   - Install and configure VNC server.
+   - Set up Enpass, NordVPN, pCloud, and MediathekView.
+   - Create Timeshift snapshots before and after major steps to ensure system safety.
    ```
 
 4. Follow the on-screen prompts for additional configurations.
