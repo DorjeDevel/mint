@@ -104,9 +104,15 @@ timeshift --create --comments "Enpass installed" --tags D
 # Install the app
 sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh)
 
-# Extra Step (weil sonst nach dem nächsten Schritt Fehlermeldung)
-usermod -aG nordvpn $USER
-
+# Check if user is in 'nordvpn' group
+if groups $USER | grep -qw "nordvpn"; then
+  echo "User is already in the 'nordvpn' group. Skipping group modification step."
+else
+  # Benutzer zur Gruppe hinzufügen
+  usermod -aG nordvpn $USER
+  echo "User has been added to the 'nordvpn' group. Please reboot your system to apply the changes."
+  exit 1
+fi
 
 # add subnet to NordVPN to make sure VNC connect while VPN is running 
 
