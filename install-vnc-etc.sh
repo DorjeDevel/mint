@@ -389,31 +389,14 @@ ffmpeg_version=$(ffmpeg -version 2>/dev/null | head -n 1)
 echo "Installed Versions:"
 echo "VLC: ${vlc_version:-Not Installed}"
 echo "FFmpeg: ${ffmpeg_version:-Not Installed}"
-
+echo
+echo
 echo "Installation complete!"
-
-
-
-
-
-
-
-
-
-
-
-
-
-## ########################################################################################################
-##
-##   xxxxx
-##
-## ########################################################################################################
-
-
-
-
-
+echo "Please check the output above"
+echo 
+echo "Thank you for using my script."
+echo "Have Fun!"
+echo
 
 
 
