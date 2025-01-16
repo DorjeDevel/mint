@@ -1,37 +1,54 @@
 #!/bin/bash
 
 ## ########################################################################################################
+##   Script Name: install-vnc-etc.sh
+##   Author: DorjeDevel
+##   Date: 2025-01-15
+##   Purpose: Install VNC, NordVPN, Enpass, pCloud, Mediathekview and related dependencies.
 ##
-##   VNC Part copied from https://github.com/axrusar/vnc-server-installer/blob/main/vnc-server-setup.sh
+##   RUN THIS SCRIPT AS SUDO.
 ##
 ## ########################################################################################################
+
+# RUN THIS SCRIPT AS SUDO.
+# Check if the script is run as root (with sudo)
+if [ "$EUID" -ne 0 ]; then
+  echo "This script must be run with sudo."
+  echo "Please run it using: sudo $0"
+  exit 1
+fi
 
 # --------------------------------------------------------------------------------------------------------
 #   Make a Timeshift Snapshot
 # --------------------------------------------------------------------------------------------------------
 
-timeshift --create --comments "Vor Start des Sktipts install-vnc-etc.sh" --tags D
+timeshift --create --comments "Before executing sctipt install-vnc-etc.sh" --tags D
 
 
 
 
-## ########################################################################################################
-##
-##   Install VNC
-##
-## ########################################################################################################
+echo "## ########################################################################################################"
+echo "##"
+echo "##   Installing VNC..."
+echo "##"
+      ##   This part of the script was copied from 
+      ##   https://github.com/axrusar/vnc-server-installer/blob/main/vnc-server-setup.sh
+      ##   and edited by DorjeDevel.
+      ##
+echo "## ########################################################################################################"
 
 
-## RUN THIS SCRIPT AS SUDO.
 ## Wait for VNC password prompt and confirmations
 
+echo
 echo "$(tput setaf 3)  Welcome to the automated VNC server installer script by axrusar :)."
 echo "  This basic script should work on Ubuntu based systems"
 echo "  Please wait for the prompts. Your VNC password can only be 8 characters or less,"
 echo "  otherwise it will get truncated."
 echo "  Select Y (default option) when prompted to store the password"
+echo
 
-read -p "Press Enter to continue" </dev/tty
+read -p "Press ENTER to continue" </dev/tty
 
 apt update
 apt install x11vnc -y
@@ -69,12 +86,12 @@ timeshift --create --comments "VNC installed" --tags D
 
 
 
-## ########################################################################################################
-##
-##   Install Enpass
-##   https://support.enpass.io/app/getting_started/installing_enpass.htm
-##
-## ########################################################################################################
+echo "## ########################################################################################################"
+echo "##"
+echo "##   Installing Enpass..."
+      ##   https://support.enpass.io/app/getting_started/installing_enpass.htm
+echo "##"
+echo "## ########################################################################################################"
 
 # add a new repository to /etc/apt/sources.list
 echo "deb https://apt.enpass.io/ stable main" | sudo tee /etc/apt/sources.list.d/enpass.list
@@ -94,12 +111,12 @@ timeshift --create --comments "Enpass installed" --tags D
 
 
 
-## ########################################################################################################
-##
-##   Install NordVPN 
-##   https://nordvpn.com/download/linux/#install-nordvpn
-##
-## ########################################################################################################
+echo "## ########################################################################################################"
+echo "##"
+echo "##   Installing NordVPN..."
+      ##   https://nordvpn.com/download/linux/#install-nordvpn
+echo "##"
+echo "## ########################################################################################################"
 
 # Install the app
 sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh)
@@ -234,23 +251,23 @@ timeshift --create --comments "NordVPN installed" --tags D
 
 
 
-## ########################################################################################################
-##
-##   Install pCloud
-##
-##   Original script from:
-##   https://surajdeshpande.wordpress.com/2021/01/18/upgrade-pcloud-version-on-ubuntu-using-shell-script/
-##   
-##   Updated and extended by DorjeDevel
-##   Version: 2025-01-16 
-##   
-##   The web browser URL for downloading the pcloud app is
-##   https://www.pcloud.com/how-to-install-pcloud-drive-linux.html?download=electron-64
-##   but wget or curl wont find the right file but instead would download the web page.
-##   You have to check with F12 in browser (choose network > Media and click on the GET line "p-lux1.cloud.com") 
-##   to see the correct URL in the file-headers area on the right side of the F12-dev-window.
-##
-## ########################################################################################################
+echo "## ########################################################################################################"
+echo "##"
+echo "##   Installing pCloud..."
+echo "##"
+      ##   Original script from:
+      ##   https://surajdeshpande.wordpress.com/2021/01/18/upgrade-pcloud-version-on-ubuntu-using-shell-script/
+      ##   
+      ##   Updated and extended by DorjeDevel
+      ##   Version: 2025-01-16 
+      ##   
+      ##   The web browser URL for downloading the pcloud app is
+      ##   https://www.pcloud.com/how-to-install-pcloud-drive-linux.html?download=electron-64
+      ##   but wget or curl wont find the right file but instead would download the web page.
+      ##   You have to check with F12 in browser (choose network > Media and click on the GET line "p-lux1.cloud.com") 
+      ##   to see the correct URL in the file-headers area on the right side of the F12-dev-window.
+      ##
+echo "## ########################################################################################################"
 
 # Determine the original user and their home directory
 USER_HOME=$(eval echo ~${SUDO_USER:-$USER})
@@ -363,11 +380,11 @@ timeshift --create --comments "pCloud installed and added to autostart" --tags D
 
 
 
-## ########################################################################################################
-##
-##   Install Mediathekview and the need VLC and ffmpeg apps
-##
-## ########################################################################################################
+echo "## ########################################################################################################"
+echo "##"
+echo "##   Installing Mediathekview, VLC and ffmpeg..."
+echo "##"
+echo "## ########################################################################################################"
 
 #!/bin/bash
 
@@ -397,13 +414,15 @@ echo "VLC: ${vlc_version:-Not Installed}"
 echo "FFmpeg: ${ffmpeg_version:-Not Installed}"
 echo
 echo
-echo "Installation complete!"
-echo "Please check the output above"
-echo 
-echo "Thank you for using my script."
-echo "Have Fun!"
-echo
 
+echo "## ########################################################################################################"
+echo "##"
+echo "##   Script complete!"
+echo "##   Please check the output above!"
+echo "##"
+echo "##   Have Fun!"
+echo "##"
+echo "## ########################################################################################################"
 
 
 
