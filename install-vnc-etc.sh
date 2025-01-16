@@ -220,6 +220,12 @@ timeshift --create --comments "NordVPN installed" --tags D
 ##   Updated and extended by DorjeDevel
 ##   Version: 2025-01-16 
 ##   
+##   The web browser URL for downloading the pcloud app is
+##   https://www.pcloud.com/how-to-install-pcloud-drive-linux.html?download=electron-64
+##   but wget or curl wont find the right file but instead would download the web page.
+##   You have to check with F12 in browser (choose network > Media and click on the GET line "p-lux1.cloud.com") 
+##   to see the correct URL in the file-headers area on the right side of the F12-dev-window.
+##
 ## ########################################################################################################
 
 # Determine the original user and their home directory
@@ -234,20 +240,14 @@ fi
 
 # Change directory to downloads folder
 echo 'Jumping to Downloads...'
-cd /home/$EXEC_USER/Downloads
-pwd 
+cd "/home/$EXEC_USER/Downloads" || { echo "Error: Unable to access Downloads folder."; exit 1; }
+pwd
 echo
 
 # Delete existing pcloud file
 echo "Removing existing pcloud file in Downloads..."
 rm -f pcloud
 echo
-
-# Download new Pcloud file
-# The web browser URL is
-# wget https://www.pcloud.com/how-to-install-pcloud-drive-linux.html?download=electron-64
-# but wget or curl wont find the right file but instead would download the web page.
-# You have to check with F12 in browser (choose network > Media and click on the GET line "p-lux1.cloud.com") to see the correct URL in the file-headers area on the right side of the F12-dev-window.
 
 # URL of the file
 url="https://p-lux1.pcloud.com/cBZOomEB3Zd6YO7b7ZZZGriWXkZ2ZZa55ZkZ9U8xVZz8ZTzZSYZpRZz4Z1pZnLZdQZpQZEQZGQZyzZU8ZYQZxqNX5ZbYH5fYNIg0Q9UsLkb78hpy1gpDzk/pcloud"
@@ -280,69 +280,59 @@ if [ "$file_size" -ge "$min_size" ]; then
 
   # Allow executing file as a program
   echo 'Making file executable...'
-  chmod +x pcloud
- 
+  chmod +x pcloud || { echo "Error: Failed to make the file executable."; exit 1; }
+
   # Kill existing pcloud processes
   echo 'Killing existing pcloud processes...'
   pgrep -u $EXEC_USER -f pcloud | xargs -r kill -9
 
   # Copy updated version to bin folder
   echo 'Copying updated version to bin folder...'
-  sudo cp pcloud /usr/bin/
+  sudo cp pcloud /usr/bin/ || { echo "Error: Failed to copy pcloud to /usr/bin."; exit 1; }
   echo 
   echo 'Starting pCloud...'
-  nohup pcloud > /dev/null 2>&1 &
+  nohup pcloud > "$HOME/.pcloud.log" 2>&1 &
 
-  # add pcloud to autostart
-
-  # name of autostart app
+  # Add pcloud to autostart
   autostart_file="$HOME/.config/autostart/pcloud.desktop"
 
-  # make sure autostart directory exists
-  mkdir -p "$HOME/.config/autostart"
+  # Make sure autostart directory exists
+  mkdir -p "$HOME/.config/autostart" || { echo "Error: Unable to create autostart directory."; exit 1; }
 
-  # Inhalt der .desktop-Datei erstellen
-  autostart_file="$HOME/.config/autostart/pcloud.desktop"
-  mkdir -p "$HOME/.config/autostart"  
-  
+  # Create autostart entry
   echo "[Desktop Entry]" > "$autostart_file"
   echo "Type=Application" >> "$autostart_file"
-  echo "Exec=$HOME/pcloud" >> "$autostart_file"
+  echo "Exec=/usr/bin/pcloud" >> "$autostart_file"  # Updated path
   echo "Hidden=false" >> "$autostart_file"
   echo "NoDisplay=false" >> "$autostart_file"
   echo "X-GNOME-Autostart-enabled=true" >> "$autostart_file"
   echo "Name=pCloud" >> "$autostart_file"
   echo "Comment=Start pCloud at login" >> "$autostart_file"
-    
+
   echo "pCloud has been added to autostart."
 
   # Set correct ownership for the user
-  chown "$EXEC_USER:$EXEC_USER" "$USER_HOME/pcloud"
+  chown "$EXEC_USER:$EXEC_USER" "$USER_HOME/Downloads/pcloud"
   chown -R "$EXEC_USER:$EXEC_USER" "$USER_HOME/.config/autostart"
 
   echo "Installation complete. pCloud has been added to startup and should now be running."
-
 else
   # File size is too small to be the pcloud app
   echo "File is too small. Deleting file..."
-  echo "Please check the download URL in this script as it seems to have changed. There is a small how to in the comment."
+  echo "Please check the download URL in this script as it seems to have changed. There is a small how-to in the comment."
   rm "$output_file"
 fi
 
-
 # Wait for User to return
-echo "Press RETURN key to continue the script..."
-read dummy
-
-
-
+echo "Press ENTER key to continue..."
+read
 
 
 
 # --------------------------------------------------------------------------------------------------------
 #   Make a Timeshift Snapshot
 # --------------------------------------------------------------------------------------------------------
-timeshift --create --comments "pCloud installed" --tags D
+timeshift --create --comments "pCloud installed and added to autostart" --tags D
 
 
 
