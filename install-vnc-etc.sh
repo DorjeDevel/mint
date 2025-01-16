@@ -18,7 +18,12 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-# Check if there is another process of this script running
+
+echo "## ########################################################################################################"
+echo "##"
+echo "##   Checking if there is another process of this script running..."
+echo "##"
+echo "## ########################################################################################################"
 
 LOCKFILE="/var/lock/install-vnc-etc.lock"
 
@@ -33,6 +38,38 @@ touch "$LOCKFILE"
 
 # Ensure the lock file is removed when the script exits
 trap 'rm -f "$LOCKFILE"' EXIT
+
+
+
+
+echo "## ########################################################################################################"
+echo "##"
+echo "##   Checking if Timeshift is running..."
+echo "##"
+echo "## ########################################################################################################"
+
+TIMESHIFT_PID=$(pgrep timeshift)
+
+if [ -n "$TIMESHIFT_PID" ]; then
+  echo "Timeshift is running with PID $TIMESHIFT_PID. Checking status..."
+  
+  # Check if Timeshift is actively creating a snapshot
+  if ps -p "$TIMESHIFT_PID" -o args= | grep -q "snapshot"; then
+    echo "Timeshift is currently creating a snapshot. Waiting for it to finish."
+    while ps -p "$TIMESHIFT_PID" -o args= | grep -q "snapshot"; do
+      sleep 5
+    done
+    echo "Snapshot creation completed. Proceeding..."
+  else
+    echo "Timeshift is running but idle. Terminating process..."
+    kill "$TIMESHIFT_PID"
+    echo "Timeshift process terminated."
+  fi
+else
+  echo "Timeshift is not running. Proceeding..."
+fi
+
+
 
 
 
