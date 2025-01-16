@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 ## ########################################################################################################
 ##   Script Name: install-vnc-etc.sh
@@ -25,6 +25,7 @@ echo "##"
 echo "##   Checking if there is another process of this script running..."
 echo "##"
 echo "## ########################################################################################################"
+echo
 
 LOCKFILE="/var/lock/install-vnc-etc.lock"
 
@@ -49,6 +50,7 @@ echo "##"
 echo "##   Checking if Timeshift is running..."
 echo "##"
 echo "## ########################################################################################################"
+echo
 
 TIMESHIFT_PID=$(pgrep timeshift)
 
