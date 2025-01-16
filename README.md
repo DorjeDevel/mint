@@ -68,7 +68,6 @@ Each installation step is automated and includes pre- and post-installation Time
    chmod +x ./install-vnc-etc.sh
    ```
    Note: Ensure you are in the same directory as the `install-vnc-etc.sh` script when running this command.
-   ```
 
 3. Run the script as `sudo`:
    ```bash
