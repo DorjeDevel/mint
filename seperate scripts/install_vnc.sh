@@ -1,11 +1,11 @@
-echo "##   Installing VNC..."
-echo "##"
-      ##   This part of the script was copied from 
-      ##   https://github.com/axrusar/vnc-server-installer/blob/main/vnc-server-setup.sh
-      ##   and edited by DorjeDevel.
-      ##
-echo "## ########################################################################################################"
-
+echo
+echo "------------------------------------------------------------------------------"
+echo "Installing VNC..."
+echo 
+####  This part of the script was copied from 
+####  https://github.com/axrusar/vnc-server-installer/blob/main/vnc-server-setup.sh
+####  and edited by DorjeDevel.
+echo "------------------------------------------------------------------------------"
 
 ## Wait for VNC password prompt and confirmations
 
@@ -47,13 +47,3 @@ echo ""
 echo "$(tput setaf 3)VNC installed and running."
 
 
-# --------------------------------------------------------------------------------------------------------
-#   Make a Timeshift Snapshot
-# --------------------------------------------------------------------------------------------------------
-timeshift --create --comments "VNC installed" --tags D
-
-
-
-echo
-echo "## ########################################################################################################"
-echo "##"
