@@ -20,7 +20,7 @@ This repository contains a collection of Bash scripts designed to automate the i
    sudo ./MAIN_install.sh
    ```
 
-The `MAIN_install.sh` script will execute all other scripts in sequence, providing a seamless setup process.
+The `MAIN_install.sh` script will execute all other scripts in sequence, providing a seamless setup process. Additionally, it gives the user the option to create a Timeshift snapshot at the very beginning to ensure system safety before any installations begin.
 
 ---
 
@@ -29,18 +29,16 @@ The `MAIN_install.sh` script will execute all other scripts in sequence, providi
 ### 1. `MAIN_install.sh`
 - The main script that orchestrates the execution of all individual installation scripts.
 - Ensures a complete setup of all applications and configurations included in this repository.
-- Creates Timeshift snapshots before and after each installation step for system safety.
+- Provides an option to create a Timeshift snapshot at the start of the installation process.
 
 ### 2. `install_vnc.sh`
 - Installs and configures `x11vnc` as a VNC server.
 - Sets up a systemd service to run the VNC server on startup.
 - Secures the VNC server with a password (8 characters or fewer).
-- Creates Timeshift snapshots before and after setup.
 
 ### 3. `install_enpass.sh`
 - Automates the installation of Enpass password manager.
 - Adds the official Enpass repository and GPG key.
-- Creates Timeshift snapshots before and after installation to ensure system integrity.
 
 ### 4. `install_nordvpn.sh`
 - Installs NordVPN using the official NordVPN setup script.
@@ -49,13 +47,11 @@ The `MAIN_install.sh` script will execute all other scripts in sequence, providi
   - Connecting to servers in Austria and Switzerland.
   - Disconnecting from NordVPN and checking connection status.
 - Creates desktop shortcuts for easy management.
-- Takes Timeshift snapshots during installation.
 
 ### 5. `install_pcloud.sh`
 - Downloads and installs the pCloud desktop client.
 - Configures pCloud to start on system boot.
 - Provides instructions for updating the download URL if it changes.
-- Includes Timeshift snapshots for safe rollback.
 
 ### 6. `install_media.sh`
 - Installs MediathekView ([mediathekview.de](https://mediathekview.de)) along with multimedia tools `vlc` and `ffmpeg` for media playback and processing.
@@ -64,7 +60,7 @@ The `MAIN_install.sh` script will execute all other scripts in sequence, providi
 ---
 
 ## Prerequisites
-- Ubuntu-based system.
+- Developed for Linux Mint Cinnamon 22.
 - Root or `sudo` access.
 - `timeshift` installed for creating system snapshots.
 
@@ -95,18 +91,10 @@ Run the main script to install and configure all applications:
 sudo ./MAIN_install.sh
 ```
 
-### Executing Individual Scripts
-If you prefer to run individual scripts, make the desired script executable and run it:
-```bash
-chmod +x ./install_enpass.sh
-sudo ./install_enpass.sh
-```
-Replace `install_enpass.sh` with the desired script name.
-
 ---
 
 ## Notes
-- **Timeshift Snapshots**: Each script creates snapshots to ensure a safe rollback if needed.
+- **Timeshift Snapshots**: The main script provides an option to create a single snapshot at the beginning of the installation process. This ensures the system can be restored to its initial state if needed.
 - **NordVPN Login**: After installation, log in using:
   ```bash
   nordvpn login
