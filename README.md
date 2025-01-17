@@ -1,109 +1,132 @@
-# Automated VNC Server and Application Installer Script
+# Automated Application Installer Scripts for Ubuntu-based Systems
 
 ## Overview
 
-This repository provides a comprehensive Bash script for automating the installation of essential applications on Ubuntu-based systems. The script includes:
+This repository contains a collection of Bash scripts designed to automate the installation and configuration of essential applications and services on Ubuntu-based systems. **All scripts should be placed in the directory `~/Downloads/install/` for proper execution.**
 
-- VNC server setup
-- Installation of Enpass
-- NordVPN configuration
-- pCloud installation and setup
-- MediathekView with VLC and FFmpeg
+### Preparation Steps
 
-Each installation step is automated and includes pre- and post-installation Timeshift snapshots to ensure system integrity.
+1. **Copy the scripts** to the directory `~/Downloads/install/`.
+2. **Make the scripts executable**:
+   ```bash
+   chmod +x ~/Downloads/install/*.sh
+   ```
+3. Navigate to this directory in the terminal:
+   ```bash
+   cd ~/Downloads/install/
+   ```
+4. Run the main script:
+   ```bash
+   sudo ./MAIN_install.sh
+   ```
+
+The `MAIN_install.sh` script will execute all other scripts in sequence, providing a seamless setup process.
 
 ---
 
-## Features
+## Scripts Overview
 
-### 1. VNC Server Setup
-- Installs and configures `x11vnc`.
-- Creates a systemd service to run the VNC server on startup.
-- Ensures secure password storage for the VNC server.
-- Includes Timeshift snapshots before and after installation.
+### 1. `MAIN_install.sh`
+- The main script that orchestrates the execution of all individual installation scripts.
+- Ensures a complete setup of all applications and configurations included in this repository.
+- Creates Timeshift snapshots before and after each installation step for system safety.
 
-### 2. Enpass Installation
+### 2. `install_vnc.sh`
+- Installs and configures `x11vnc` as a VNC server.
+- Sets up a systemd service to run the VNC server on startup.
+- Secures the VNC server with a password (8 characters or fewer).
+- Creates Timeshift snapshots before and after setup.
+
+### 3. `install_enpass.sh`
+- Automates the installation of Enpass password manager.
 - Adds the official Enpass repository and GPG key.
-- Installs Enpass password manager.
-- Takes Timeshift snapshots to save system state.
+- Creates Timeshift snapshots before and after installation to ensure system integrity.
 
-### 3. NordVPN Setup
-- Automates NordVPN installation using the official NordVPN script.
-- Configures subnet whitelisting for VNC server access during VPN use.
-- Provides pre-configured scripts for:
-  - Connecting to Austria and Switzerland servers.
-  - Disconnecting and checking NordVPN status.
-- Creates desktop shortcuts for easy access.
-- Includes Timeshift snapshots.
+### 4. `install_nordvpn.sh`
+- Installs NordVPN using the official NordVPN setup script.
+- Configures subnet whitelisting for VNC server access when VPN is active.
+- Includes pre-configured scripts for:
+  - Connecting to servers in Austria and Switzerland.
+  - Disconnecting from NordVPN and checking connection status.
+- Creates desktop shortcuts for easy management.
+- Takes Timeshift snapshots during installation.
 
-### 4. pCloud Installation
-- Automates pCloud download, installation, and setup.
-- Adds pCloud to system startup.
-- Provides instructions to handle potential URL changes for downloading the application.
-- Includes Timeshift snapshots.
+### 5. `install_pcloud.sh`
+- Downloads and installs the pCloud desktop client.
+- Configures pCloud to start on system boot.
+- Provides instructions for updating the download URL if it changes.
+- Includes Timeshift snapshots for safe rollback.
 
-### 5. MediathekView and Multimedia Tools
-- Installs `vlc` and `ffmpeg` for media playback and processing.
-- Verifies the installation by displaying installed versions.
+### 6. `install_media.sh`
+- Installs MediathekView ([mediathekview.de](https://mediathekview.de)) along with multimedia tools `vlc` and `ffmpeg` for media playback and processing.
+- Verifies successful installation by checking installed versions.
 
 ---
 
 ## Prerequisites
 - Ubuntu-based system.
-- Root or `sudo` access to execute the script.
-- Ensure `timeshift` is installed for system snapshots.
+- Root or `sudo` access.
+- `timeshift` installed for creating system snapshots.
 
 ---
 
 ## Usage
 
-1. Clone the repository:
+### Cloning the Repository
+```bash
+git clone https://github.com/DorjeDevel/mint.git
+cd mint
+```
+
+### Preparing the Scripts
+1. Copy all scripts to the `~/Downloads/install/` directory.
+2. Make all scripts executable:
    ```bash
-   git clone https://github.com/DorjeDevel/mint.git
-   cd mint
+   chmod +x ~/Downloads/install/*.sh
+   ```
+3. Navigate to this directory in the terminal:
+   ```bash
+   cd ~/Downloads/install/
    ```
 
-2. Make the script executable:
-   ```bash
-   chmod +x ./install-vnc-etc.sh
-   ```
-   Note: Ensure you are in the same directory as the `install-vnc-etc.sh` script when running this command.
+### Running the Main Script
+Run the main script to install and configure all applications:
+```bash
+sudo ./MAIN_install.sh
+```
 
-3. Run the script as `sudo`:
-   ```bash
-   sudo ./install-vnc-etc.sh
-   ```
-   This script will:
-   - Install and configure VNC server.
-   - Set up Enpass, NordVPN, pCloud, and MediathekView.
-   - Create Timeshift snapshots before and after major steps to ensure system safety.
-
-4. Follow the on-screen prompts for additional configurations.
+### Executing Individual Scripts
+If you prefer to run individual scripts, make the desired script executable and run it:
+```bash
+chmod +x ./install_enpass.sh
+sudo ./install_enpass.sh
+```
+Replace `install_enpass.sh` with the desired script name.
 
 ---
 
 ## Notes
-- **VNC Password**: The password for `x11vnc` must be 8 characters or fewer.
-- **NordVPN**: Reboot the system after installing NordVPN and login using:
+- **Timeshift Snapshots**: Each script creates snapshots to ensure a safe rollback if needed.
+- **NordVPN Login**: After installation, log in using:
   ```bash
   nordvpn login
   ```
-- **pCloud**: If the download URL changes, refer to the comment in the script for instructions on updating the URL.
+- **Updating pCloud URL**: If the download URL changes, update it in the `install_pcloud.sh` script as per the included comments.
 
 ---
 
 ## Troubleshooting
-- Check the Timeshift snapshots if you encounter issues.
-- Ensure network connectivity for downloading application files.
-- Verify that you have sufficient permissions to execute the script.
-
----
-
-## Disclaimer
-This script is provided "as-is" without warranty. Use at your own risk.
+- Verify Timeshift snapshots if you encounter issues.
+- Ensure active network connectivity during installation.
+- Check file permissions to ensure scripts are executable.
 
 ---
 
 ## License
-[MIT License](LICENSE)
+This repository is licensed under the [MIT License](LICENSE). Use at your own risk.
+
+---
+
+## Disclaimer
+These scripts are provided "as-is" without warranty. Users are advised to review and test them before deploying on critical systems.
 
