@@ -1,7 +1,11 @@
-echo "##   Installing NordVPN..."
-      ##   https://nordvpn.com/download/linux/#install-nordvpn
-echo "##"
-echo "## ########################################################################################################"
+echo
+echo "------------------------------------------------------------------------------"
+echo
+echo "Installing NordVPN..."
+####  https://nordvpn.com/download/linux/#install-nordvpn
+echo
+echo "------------------------------------------------------------------------------"
+echo
 
 # Install the app
 sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh)
@@ -16,7 +20,9 @@ else
   exit 1
 fi
 
-# add subnet to NordVPN to make sure VNC connect while VPN is running 
+echo "------------------------------------------------------------------------------"
+echo
+echo "Adding your subnet to NordVPN to make sure VNC also connects while VPN is running..."
 
 # collect IP address and subnetz mask
 CURRENT_IP=$(ip -o -f inet addr show | awk '/scope global/ {print $4}')
@@ -35,26 +41,25 @@ else
 fi
 
 
-echo "After NordVPN is installed reboot your computer and log in to your NordVPN account:"
-echo "> reboot"
-echo "> nordvpn login"
-echo 
-echo "Then connect to a VPN server:"
-echo "> nordvpn connect"
-echo "or "
-echo "> nordvpn connect Austria"
-echo "> nordvpn connect Switzerland"
-echo 
-echo "Disconnect VPN with:"
-echo "> nordvpn disconnect"
 echo
-echo "Check VPN status with: "
-echo "> nordvpn status"
+echo "------------------------------------------------------------------------------"
 echo
-
-## #############################
-##   Make some NordVPN files  ##
-## #############################
+echo "After NordVPN is installed reboot system and log in"
+echo "to your NordVPN account with:     reboot"
+echo "                                  nordvpn login"
+echo 
+echo "Connect to a NordVPN server with: nordvpn connect"
+echo "                                  nordvpn connect Austria"
+echo "                                  nordvpn connect Switzerland"
+echo
+echo "Disconnect NordVPN with:          nordvpn disconnect"
+echo
+echo "Check NordVPN status with:        nordvpn status"
+echo
+echo "------------------------------------------------------------------------------"
+echo
+echo "Creating some usefull NordVPN files"
+echo
 
 # Determine the original user
 USER_HOME=$(eval echo ~${SUDO_USER})
@@ -124,17 +129,30 @@ Name[de_DE]=Run STATUS' > "$USER_HOME/NordVPN/Run STATUS.desktop"
 chown "$SUDO_USER:$SUDO_USER" "$USER_HOME/NordVPN/Run STATUS.desktop"
 chmod +x "$USER_HOME/NordVPN/Run STATUS.desktop"
 
+echo
 echo "Ready."
+echo
 echo "You can find the files in the created NordVPN folder."
 echo "The 'Run STATUS.desktop' is running the 'NordVPN-STATUS.sh' without asking for permission."
-
-# --------------------------------------------------------------------------------------------------------
-#   Make a Timeshift Snapshot
-# --------------------------------------------------------------------------------------------------------
-timeshift --create --comments "NordVPN installed" --tags D
-
+echo
+echo
 
 
 echo
-echo "## ########################################################################################################"
-echo "##"
+echo "------------------------------------------------------------------------------"
+echo "NordVPN setup complete!"
+echo
+echo "The system needs to be rebooted."
+echo
+echo "After reboot please login to NordVPN with 'nordvpn login'"
+echo
+echo "To continue app installation, please run this script again and continue with "
+echo "installation of pCloud."
+echo
+echo "Now press Return to reboot..."
+read -r
+
+echo "Rebooting system..."
+sudo reboot
+
+
