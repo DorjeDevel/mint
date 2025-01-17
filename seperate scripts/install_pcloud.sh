@@ -1,18 +1,14 @@
-echo "##   Installing pCloud..."
-echo "##"
-      ##   Original script from:
-      ##   https://surajdeshpande.wordpress.com/2021/01/18/upgrade-pcloud-version-on-ubuntu-using-shell-script/
-      ##   
-      ##   Updated and extended by DorjeDevel
-      ##   Version: 2025-01-16 
-      ##   
-      ##   The web browser URL for downloading the pcloud app is
-      ##   https://www.pcloud.com/how-to-install-pcloud-drive-linux.html?download=electron-64
-      ##   but wget or curl wont find the right file but instead would download the web page.
-      ##   You have to check with F12 in browser (choose network > Media and click on the GET line "p-lux1.cloud.com") 
-      ##   to see the correct URL in the file-headers area on the right side of the F12-dev-window.
-      ##
-echo "## ########################################################################################################"
+echo
+echo "------------------------------------------------------------------------------"
+echo
+echo "Installing pCloud..."
+echo 
+##    Original script from:
+##    https://surajdeshpande.wordpress.com/2021/01/18/upgrade-pcloud-version-on-ubuntu-using-shell-script/
+##    Updated and extended by DorjeDevel
+##    Version: 2025-01-16 
+##    Note: Manual download is required for this script.
+echo 
 
 # Determine the original user and their home directory
 USER_HOME=$(eval echo ~${SUDO_USER:-$USER})
@@ -24,45 +20,42 @@ if [ "$(uname -m)" != "x86_64" ]; then
   exit 1
 fi
 
+# Prompt user to download the file manually and open the URL in the default browser
+echo "The download URL will be opened in your default browser."
+echo "Please download the pCloud executable and save it as 'pcloud' in your Downloads folder."
+echo
+echo "If the browser does not open, please visit this URL manually:"
+echo "https://www.pcloud.com/how-to-install-pcloud-drive-linux.html?download=electron-64"
+echo
+
+# Open the URL in the browser as the original user
+sudo -u "$EXEC_USER" xdg-open "https://www.pcloud.com/how-to-install-pcloud-drive-linux.html?download=electron-64" || { echo "Error: Unable to open the browser."; exit 1; }
+
+# Wait for user confirmation
+echo "Press ENTER once you have downloaded the file to continue..."
+read
+
 # Change directory to downloads folder
 echo 'Jumping to Downloads...'
-cd "/home/$EXEC_USER/Downloads" || { echo "Error: Unable to access Downloads folder."; exit 1; }
+cd "$USER_HOME/Downloads" || { echo "Error: Unable to access Downloads folder."; exit 1; }
 pwd
 echo
 
-# Delete existing pcloud file
-echo "Removing existing pcloud file in Downloads..."
-rm -f pcloud
-echo
-
-# URL of the file
-url="https://p-lux1.pcloud.com/cBZOomEB3Zd6YO7b7ZZZGriWXkZ2ZZa55ZkZ9U8xVZz8ZTzZSYZpRZz4Z1pZnLZdQZpQZEQZGQZyzZU8ZYQZxqNX5ZbYH5fYNIg0Q9UsLkb78hpy1gpDzk/pcloud"
-
-# Target file name
-output_file="pcloud"
-
-# Minimum size in bytes (50 MB = 50 * 1024 * 1024)
-min_size=$((50 * 1024 * 1024))
-
-# Download the file
-echo "Downloading file..."
-wget "$url" -O "$output_file"
-
-# Check if the download was successful
-if [ $? -ne 0 ]; then
-  echo "Error: Failed to download the file."
+# Check if the file exists
+if [ ! -f "pcloud" ]; then
+  echo "Error: 'pcloud' file not found in Downloads folder. Please make sure to download it correctly."
   exit 1
 fi
 
 # Get the size of the downloaded file
-file_size=$(stat -c%s "$output_file")
+file_size=$(stat -c%s "pcloud")
 
-# Display the file size
-echo "File size: $file_size bytes"
+# Minimum size in bytes (50 MB = 50 * 1024 * 1024)
+min_size=$((50 * 1024 * 1024))
 
 # Check the size
 if [ "$file_size" -ge "$min_size" ]; then
-  # File is large enough. Proceeding with the script.
+  echo "File size is valid. Proceeding with installation..."
 
   # Allow executing file as a program
   echo 'Making file executable...'
@@ -70,7 +63,13 @@ if [ "$file_size" -ge "$min_size" ]; then
 
   # Kill existing pcloud processes
   echo 'Killing existing pcloud processes...'
-  pgrep -u $EXEC_USER -f pcloud | xargs -r kill -9
+  pgrep -u $EXEC_USER -f pcloud | xargs -r sudo kill -9
+
+  # Remove existing pcloud file in /usr/bin if it exists
+  if [ -f "/usr/bin/pcloud" ]; then
+    echo 'Removing existing pcloud file in /usr/bin...'
+    sudo rm -f /usr/bin/pcloud || { echo "Error: Failed to remove existing pcloud file."; exit 1; }
+  fi
 
   # Copy updated version to bin folder
   echo 'Copying updated version to bin folder...'
@@ -79,16 +78,17 @@ if [ "$file_size" -ge "$min_size" ]; then
   echo 'Starting pCloud...'
   nohup pcloud > "$HOME/.pcloud.log" 2>&1 &
 
-  # Add pcloud to autostart
+  echo "------------------------------------------------------------------------------"
+  echo "Adding pcloud to autostart..."
 
   # Make sure autostart directory exists
-  mkdir -p "$HOME/.config/autostart" || { echo "Error: Unable to create autostart directory."; exit 1; }
+  mkdir -p "$USER_HOME/.config/autostart" || { echo "Error: Unable to create autostart directory."; exit 1; }
 
   # Create autostart entry
-  autostart_file="$HOME/.config/autostart/pcloud.desktop"
+  autostart_file="$USER_HOME/.config/autostart/pcloud.desktop"
   echo "[Desktop Entry]" > "$autostart_file"
   echo "Type=Application" >> "$autostart_file"
-  echo "Exec=/usr/bin/pcloud" >> "$autostart_file"  # Updated path
+  echo "Exec=/usr/bin/pcloud" >> "$autostart_file"
   echo "Hidden=false" >> "$autostart_file"
   echo "NoDisplay=false" >> "$autostart_file"
   echo "X-GNOME-Autostart-enabled=true" >> "$autostart_file"
@@ -96,34 +96,21 @@ if [ "$file_size" -ge "$min_size" ]; then
   echo "Comment=Start pCloud at login" >> "$autostart_file"
 
   echo "pCloud has been added to autostart."
+  echo
 
   # Set correct ownership for the user
+  echo "------------------------------------------------------------------------------"
+  echo "Setting correct ownership to pcloud for current user..."
   chown "$EXEC_USER:$EXEC_USER" "$USER_HOME/Downloads/pcloud"
   chown -R "$EXEC_USER:$EXEC_USER" "$USER_HOME/.config/autostart"
 
-  echo "Installation complete. pCloud has been added to startup and should now be running."
+  echo
+  echo "Installation complete."
+  echo "pCloud has been added to startup and should now be running."
+  echo
 else
-  # File size is too small to be the pcloud app
-  echo "File is too small. Deleting file..."
-  echo "Please check the download URL in this script as it seems to have changed. There is a small how-to in the comment."
-  rm "$output_file"
+  echo "File is too small. Please check your download and try again."
+  exit 1
 fi
 
-# Wait for User to return
-echo "Press ENTER key to continue..."
-read
 
-
-
-
-# --------------------------------------------------------------------------------------------------------
-#   Make a Timeshift Snapshot
-# --------------------------------------------------------------------------------------------------------
-timeshift --create --comments "pCloud installed and added to autostart" --tags D
-
-
-
-
-echo
-echo "## ########################################################################################################"
-echo "##"
