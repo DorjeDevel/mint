@@ -60,6 +60,27 @@ else
 fi
 
 
+# Install Java Runtime Environment
+echo "------------------------------------------------------------------------------"
+echo "Installing Java Runtime Environment (JRE)..."
+if sudo apt install -y default-jre; then
+    echo "Java Runtime Environment (JRE) was successfully installed!"
+else
+    echo "Failed to install Java Runtime Environment (JRE). Please check for errors above."
+    exit 1
+fi
+
+# Verify the Java installation
+echo "------------------------------------------------------------------------------"
+echo "Verifying Java installation..."
+if command -v java &> /dev/null; then
+    java_version=$(java -version 2>&1 | head -n 1)
+    echo "Java is installed and ready to use! Version: $java_version"
+else
+    echo "Java seems not to be installed correctly. Please troubleshoot the issue."
+    exit 1
+fi
+
 
 
 # Install MediathekView
