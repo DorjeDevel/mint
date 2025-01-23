@@ -59,6 +59,30 @@ else
     echo "FFmpeg is not properly installed. Please check your package sources."
 fi
 
+
+
+
+# Install MediathekView
+echo "------------------------------------------------------------------------------"
+echo "Installing MediathekView..."
+if sudo apt install -y mediathekview; then
+    echo "MediathekView was successfully installed!"
+else
+    echo "Failed to install MediathekView. Please check for errors above."
+    exit 1
+fi
+
+# Verify the installation
+echo "------------------------------------------------------------------------------"
+echo "Verifying MediathekView installation..."
+if command -v mediathekview &> /dev/null; then
+    echo "MediathekView is installed and ready to use!"
+else
+    echo "MediathekView seems not to be installed correctly. Please troubleshoot the issue."
+    exit 1
+fi
+
+
 # Display installation results
 echo "------------------------------------------------------------------------------"
 echo "Installation Results:"
